@@ -79,4 +79,131 @@ abstract class Zone extends Cell {
         populationOutput = 0;
         goodsOutput = 0;
         lifestyleOutput = 0;
-    }}
+    }
+
+    public void receiveUtility(String type, int amount) {
+        switch (type) {
+            case "electricity":
+                electricityReceived += amount;
+                break;
+            case "water":
+                waterReceived += amount;
+                break;
+            case "internet":
+                internetReceived += amount;
+                break;
+        }
+    }
+
+    public void receiveService(String type) {
+        switch (type) {
+            case "security":
+                hasSecurity = true;
+                break;
+            case "health":
+                hasHealth = true;
+                break;
+            case "education":
+                hasEducation = true;
+                break;
+        }
+    }
+
+    public void receivePopulation(int amount) {
+        populationReceived += amount;
+    }
+
+    public void receiveGoods(int amount) {
+        goodsReceived += amount;
+    }
+
+    public void receiveLifestyle(int amount) {
+        lifestyleReceived += amount;
+    }
+
+    public int getUtilityDemand(String type) {
+        int cap = Math.max(1, currentOutputForDemand());
+
+        switch (type) {
+            case "electricity":
+                return Math.max(0, cap - electricityReceived);
+            case "water":
+                return Math.max(0, cap - waterReceived);
+            case "internet":
+                return Math.max(0, cap - internetReceived);
+            default:
+                return 0;
+        }
+    }
+
+    protected abstract int currentOutputForDemand();
+
+    public abstract String getZoneType();
+
+    public void updateLevel() {
+        if (!hasRequiredUtilitiesForLevelOne()) {
+            level = 0;
+            return;
+        }
+
+        int target = targetLevel();
+
+        if (target > level) {
+            level++;
+        } else if (target < level) {
+            level--;
+        }
+    }
+
+    private int targetLevel() {
+        if (canReachLevelThree()) {
+            return 3;
+        }
+
+        if (canReachLevelTwo()) {
+            return 2;
+        }
+
+        if (canReachLevelOne()) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    protected abstract boolean hasRequiredUtilitiesForLevelOne();
+
+    protected abstract boolean canReachLevelOne();
+
+    protected abstract boolean canReachLevelTwo();
+
+    protected abstract boolean canReachLevelThree();
+
+    public abstract void calculateOutput();
+
+    public int getPopulationOutput() {
+        return populationOutput;
+    }
+
+    public int getGoodsOutput() {
+        return goodsOutput;
+    }
+
+    public int getLifestyleOutput() {
+        return lifestyleOutput;
+    }
+
+    protected int minimumUtilityReceived() {
+        return Math.min(electricityReceived, Math.min(waterReceived, internetReceived));
+    }
+
+    protected boolean hasAllBasicUtilities() {
+        return electricityReceived > 0
+                && waterReceived > 0
+                && internetReceived > 0;
+    }
+
+    protected boolean hasElectricityAndWater() {
+        return electricityReceived > 0 && waterReceived > 0;
+    }
+}
