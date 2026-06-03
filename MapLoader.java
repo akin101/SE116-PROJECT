@@ -74,11 +74,11 @@ class MapLoader {
     private static Cell createCell(char symbol, int row, int col) {
         switch (Character.toUpperCase(symbol)) {
             case 'H':
-                return new Housing1(row, col);
+                return new Housing(row, col);
             case 'I':
-                return new Industrial1(row, col);
+                return new Industrial(row, col);
             case 'C':
-                return new Commercial1(row, col);
+                return new Commercial(row, col);
             case 'P':
                 return new PowerPlant(row, col);
             case 'W':
@@ -86,11 +86,11 @@ class MapLoader {
             case 'T':
                 return new InternetHub(row, col);
             case 'F':
-                return new PoliceStation1(row, col);
+                return new PoliceStation(row, col);
             case 'D':
-                return new Hospital1(row, col);
+                return new Hospital(row, col);
             case 'S':
-                return new School1(row, col);
+                return new School(row, col);
             case 'R':
                 return new Road(row, col);
             case 'E':
